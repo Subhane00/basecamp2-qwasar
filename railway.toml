@@ -1,2 +1,3 @@
-[build]
-buildCommand = "npm install"
+[deploy]
+[deploy.variables]
+RAILPACK_INSTALL_CMD = "npm install"
