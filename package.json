@@ -1,0 +1,24 @@
+{
+    "name": "project",
+    "version": "1.0.0",
+    "description": "***",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git@git.us.qwasar.io:my_basecamp_1_212283_bxwa7b/my_basecamp_1.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "bcryptjs": "^3.0.3",
+      "express": "^5.2.1",
+      "express-session": "^1.19.0",
+      "sequelize": "^6.37.8",
+      "sqlite3": "^6.0.1"
+    }
+  }
+  

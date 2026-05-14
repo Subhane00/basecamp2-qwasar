@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyBasecamp</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./CSS/style.css">
+</head>
+<body>
+
+<div id="auth-screen">
+  <div class="card">
+    <div class="logo-big">My<span>Base</span>camp</div>
+    <div class="tabs" style="margin: 0 auto 20px;">
+      <button class="tab-btn active" onclick="switchAuth('login')">Giriş</button>
+      <button class="tab-btn" onclick="switchAuth('register')">Qeydiyyat</button>
+    </div>
+    <div id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="emailiniz@mail.com">
+      </div>
+      <div class="form-group">
+        <label>Şifrə</label>
+        <input type="password" id="login-pass" placeholder="••••••">
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Daxil ol</button>
+    </div>
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label>Ad</label>
+        <input type="text" id="reg-name" placeholder="Adınız">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="siz@mail.com">
+      </div>
+      <div class="form-group">
+        <label>Şifrə</label>
+        <input type="password" id="reg-pass" placeholder="••••••">
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="doRegister()">Qeydiyyatdan keç</button>
+    </div>
+  </div>
+</div>
+
+<div id="app-screen">
+  <nav>
+    <div class="logo">My<span>Base</span>camp</div>
+    <div id="nav-user">
+      <span id="nav-admin-badge">ADMIN</span>
+      <span>Xoş gəldin, <b id="nav-name"></b></span>
+      <button style="border-radius:5px;border:0;color:white;background-color:#26A6BC;padding:5px;" id="btn-profile" onclick="showProfile()">Profilim</button>
+      <button id="btn-logout" onclick="doLogout()">Çıxış</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="tabs" id="main-tabs">
+      <button class="tab-btn active" onclick="showSection('projects')">Proyektlər</button>
+      <button class="tab-btn" onclick="showSection('new-project')">+ Yeni Proyekt</button>
+      <button class="tab-btn" onclick="showSection('users')">İstifadəçilər</button>
+    </div>
+
+    <div id="section-projects" class="section active">
+      <div class="card">
+        <h2>Proyektlərim</h2>
+        <div id="project-list"><div class="empty">Yüklənir...</div></div>
+      </div>
+    </div>
+
+    <div id="section-new-project" class="section">
+      <div class="card">
+        <h2>Yeni Proyekt</h2>
+        <div class="form-group">
+          <label>Başlıq</label>
+          <input type="text" id="proj-title" placeholder="Proyekt adı">
+        </div>
+        <div class="form-group">
+          <label>Təsvir</label>
+          <textarea id="proj-desc" placeholder="Proyekt haqqında..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="createProject()">Yarat</button>
+      </div>
+    </div>
+
+    <div id="section-users" class="section">
+      <div class="card">
+        <h2>Bütün İstifadəçilər</h2>
+        <div id="user-list"><div class="empty">Yüklənir...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="edit-modal">
+  <div class="inner">
+    <h3>Proyekti Redaktə et</h3>
+    <input type="hidden" id="edit-proj-id">
+    <div class="form-group">
+      <label>Başlıq</label>
+      <input type="text" id="edit-proj-title">
+    </div>
+    <div class="form-group">
+      <label>Təsvir</label>
+      <textarea id="edit-proj-desc"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveEdit()">Saxla</button>
+      <button class="btn btn-cancel" onclick="closeEdit()">Ləğv et</button>
+    </div>
+  </div>
+</div>
+
+<div id="project-show-modal">
+  <div class="inner" style="max-width:700px;width:90%;max-height:90vh;overflow-y:auto;">
+    <h3 id="show-proj-title"></h3>
+    <p><b>Müəllif:</b> <span id="show-proj-author"></span></p>
+    <p id="show-proj-desc" style="margin-bottom:16px"></p>
+
+    <div id="members-section" style="margin-bottom:16px">
+      <h4 style="margin-bottom:8px">👥 Üzvlər</h4>
+      <div id="members-list"></div>
+      <div id="add-member-form" style="display:none;margin-top:8px;gap:8px;align-items:center">
+        <select id="member-user-select" style="padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:13px;background:var(--bg)"></select>
+        <button class="btn btn-primary btn-sm" onclick="addMember()">Əlavə et</button>
+      </div>
+    </div>
+
+    <hr style="margin-bottom:16px">
+
+    <h4 style="margin-bottom:8px">📎 Fayllar</h4>
+    <div id="attachments-list" style="margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px">
+      <input type="file" id="attachment-file" accept=".png,.jpg,.pdf,.txt" style="font-size:13px">
+      <button class="btn btn-primary btn-sm" onclick="uploadAttachment()">Yüklə</button>
+    </div>
+
+    <hr style="margin-bottom:16px">
+
+    <h4 style="margin-bottom:8px">💬 Müzakirələr</h4>
+    <div id="threads-list" style="margin-bottom:8px"></div>
+    <div id="new-thread-form" style="display:none;gap:8px;align-items:center;margin-bottom:8px">
+      <input type="text" id="thread-title-input" placeholder="Mövzu başlığı" style="flex:1">
+      <button class="btn btn-primary btn-sm" onclick="createThread()">Yarat</button>
+    </div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn btn-cancel" onclick="closeProjectShow()">Bağla</button>
+    </div>
+  </div>
+</div>
+
+<div id="thread-show-modal">
+  <div class="inner" style="max-width:600px;width:90%;max-height:90vh;overflow-y:auto;">
+    <h3 id="thread-modal-title" style="margin-bottom:12px"></h3>
+    <div id="messages-list" style="max-height:350px;overflow-y:auto;margin-bottom:12px"></div>
+    <textarea id="new-message-input" placeholder="Mesajınızı yazın..." rows="3" style="width:100%;margin-bottom:8px"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="sendMessage()">Göndər</button>
+      <button class="btn btn-cancel" onclick="closeThreadShow()">Bağla</button>
+    </div>
+  </div>
+</div>
+
+<div id="user-show-modal">
+  <div class="inner">
+    <h3>İstifadəçi Məlumatları</h3>
+    <p><b>Ad:</b> <span id="show-user-name"></span></p>
+    <p><b>Email:</b> <span id="show-user-email"></span></p>
+    <p><b>Admin:</b> <span id="show-user-admin"></span></p>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeUserShow()">Bağla</button>
+    </div>
+  </div>
+</div>
+
+<div id="profile-modal">
+  <div class="inner">
+    <h3>Profilim</h3>
+    <div class="form-group">
+      <label>Ad</label>
+      <input type="text" id="profile-name">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="profile-email">
+    </div>
+    <div class="form-group">
+      <label>Yeni Şifrə (dəyişmək istəmirsənsə boş qoy)</label>
+      <input type="password" id="profile-password" placeholder="••••••">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveProfile()">Yadda saxla</button>
+      <button class="btn btn-cancel" onclick="closeProfile()">Bağla</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
